@@ -1,0 +1,6 @@
+Cat 12 mas 01/01
+Cat 12 BD 02/01
+bear 12 mas 01/03
+lion 12 BD 01/05
+dog 12 BD 11/11
+polar 12 mas 21/11
