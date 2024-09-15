@@ -7,6 +7,11 @@ struct Date {
 	int month;
 };
 
+class SomeClass {
+
+};
+
+
 class ForEvent {
 protected:
 	std::string type;
