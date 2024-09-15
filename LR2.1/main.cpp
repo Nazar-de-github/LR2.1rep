@@ -8,7 +8,7 @@ struct Date {
 };
 
 class SomeClass {
-
+	int inte;
 };
 
 
