@@ -173,10 +173,10 @@ std::ifstream& operator>>(std::ifstream& s, Gift& gift) {
 	return s;
 }
 
-
+template<typename Gift_t>
 class Menu {
 private:
-	MyCont<std::string, Gift> container;
+	MyCont<std::string, Gift_t> container;
 
 	void add_from_keyboard();
 	void add_from_file();
@@ -201,7 +201,8 @@ public:
 	void main();
 };
 
-void Menu::add_from_keyboard()
+template<typename Gift_t>
+void Menu<Gift_t>::add_from_keyboard()
 {
 	system("cls");
 	std::string name;
@@ -234,7 +235,7 @@ void Menu::add_from_keyboard()
 		std::cin >> day;
 	}
 	int month;
-	std::cout << "Enter the price: ";
+	std::cout << "Enter the month: ";
 	std::cin >> month;
 	while (std::cin.fail())
 	{
@@ -244,15 +245,15 @@ void Menu::add_from_keyboard()
 		std::cin >> month;
 	}
 
-	Gift temp(name, price, type, {day, month});
+	Gift_t temp(name, price, type, {day, month});
 	container.Add(temp);
 
 	system("cls");
 	std::cout << "Successfully add new gift\n";
 	Add();
 }
-
-void Menu::add_from_file()
+template<typename Gift_t>
+void Menu<Gift_t>::add_from_file()
 {
 	system("cls");
 	std::string file_name;
@@ -273,8 +274,8 @@ void Menu::add_from_file()
 	std::cout << "Successfully add new gifts\n";
 	Add();
 }
-
-void Menu::show_for_type()
+template<typename Gift_t>
+void Menu<Gift_t>::show_for_type()
 {
 	system("cls");
 	std::string type;
@@ -304,8 +305,8 @@ void Menu::show_for_type()
 		main();
 	}
 }
-
-void Menu::show_all()
+template<typename Gift_t>
+void Menu<Gift_t>::show_all()
 {
 	system("cls");
 
@@ -331,8 +332,8 @@ void Menu::show_all()
 		main();
 	}
 }
-
-void Menu::show_vector()
+template<typename Gift_t>
+void Menu<Gift_t>::show_vector()
 {
 	system("cls");
 
@@ -358,8 +359,8 @@ void Menu::show_vector()
 		main();
 	}
 }
-
-void Menu::delete_name()
+template<typename Gift_t>
+void Menu<Gift_t>::delete_name()
 {
 	system("cls");
 	std::string name;
@@ -373,8 +374,8 @@ void Menu::delete_name()
 		std::cout << "Gift was not found\n";
 	delete_menu();
 }
-
-void Menu::delete_all()
+template<typename Gift_t>
+void Menu<Gift_t>::delete_all()
 {
 	system("cls");
 	bool choose;
@@ -396,8 +397,8 @@ void Menu::delete_all()
 	std::cout << "Successfully delete all gifts\n";
 	delete_menu();
 }
-
-void Menu::show_sum_type()
+template<typename Gift_t>
+void Menu<Gift_t>::show_sum_type()
 {
 	system("cls");
 	std::string type;
@@ -408,15 +409,15 @@ void Menu::show_sum_type()
 	std::cout << "Summary price: " << container.sum_of_all_price(type)<<"\n";
 	main();
 }
-
-void Menu::show_sum_all()
+template<typename Gift_t>
+void Menu<Gift_t>::show_sum_all()
 {
 	system("cls");
 	std::cout << "Summary price: " << container.sum_of_all_price() << "\n";
 	main();
 }
-
-void Menu::main()
+template<typename Gift_t>
+void Menu<Gift_t>::main()
 {
 	std::cout << std::endl;
 	std::cout << "               ==========================MENU==========================             \n\n";
@@ -486,8 +487,8 @@ void Menu::main()
 		}
 	}
 }
-
-void Menu::Add()
+template<typename Gift_t>
+void Menu<Gift_t>::Add()
 {
 	std::cout << std::endl;
 	std::cout << "               ===================== Add new gift =====================             \n\n";
@@ -530,8 +531,8 @@ void Menu::Add()
 		}
 	}
 }
-
-void Menu::show()
+template<typename Gift_t>
+void Menu<Gift_t>::show()
 {
 	std::cout << std::endl;
 	std::cout << "               ========================= Show =========================             \n\n";
@@ -579,8 +580,8 @@ void Menu::show()
 		}
 	}
 }
-
-void Menu::delete_menu()
+template<typename Gift_t>
+void Menu<Gift_t>::delete_menu()
 {
 	std::cout << std::endl;
 	std::cout << "               ========================= Delete =========================             \n\n";
@@ -623,8 +624,8 @@ void Menu::delete_menu()
 		}
 	}
 }
-
-void Menu::show_sum()
+template<typename Gift_t>
+void Menu<Gift_t>::show_sum()
 {
 	std::cout << std::endl;
 	std::cout << "               ================== Show summary price ==================             \n\n";
@@ -667,8 +668,8 @@ void Menu::show_sum()
 		}
 	}
 }
-
-void Menu::sort_menu()
+template<typename Gift_t>
+void Menu<Gift_t>::sort_menu()
 {
 	std::cout << std::endl;
 	std::cout << "               ========================== Sort ========================             \n\n";
@@ -721,8 +722,8 @@ void Menu::sort_menu()
 		}
 	}
 }
-
-void Menu::sort_by(std::string sortBy)
+template<typename Gift_t>
+void Menu<Gift_t>::sort_by(std::string sortBy)
 {
 	system("cls");
 	bool choose;
@@ -740,19 +741,19 @@ void Menu::sort_by(std::string sortBy)
 	{
 		if (sortBy == "price")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_price() < b.get_price(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_price() < b.get_price(); });
 		}
 		if (sortBy == "name")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_name() < b.get_name(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_name() < b.get_name(); });
 		}
 		if (sortBy == "category")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_type() < b.get_type(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_type() < b.get_type(); });
 		}
 		if (sortBy == "date")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return ( a.get_date().month < b.get_date().month ||
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return ( a.get_date().month < b.get_date().month ||
 				a.get_date().month == b.get_date().month && a.get_date().day < b.get_date().day ); });
 		}
 	}
@@ -760,19 +761,19 @@ void Menu::sort_by(std::string sortBy)
 	{
 		if (sortBy == "price")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_price() > b.get_price(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_price() > b.get_price(); });
 		}
 		if (sortBy == "name")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_name() > b.get_name(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_name() > b.get_name(); });
 		}
 		if (sortBy == "category")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return a.get_type() > b.get_type(); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return a.get_type() > b.get_type(); });
 		}
 		if (sortBy == "date")
 		{
-			container.Sort([](const Gift& a, const Gift& b) {return (a.get_date().month > b.get_date().month ||
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return (a.get_date().month > b.get_date().month ||
 				a.get_date().month == b.get_date().month && a.get_date().day > b.get_date().day); });
 		}
 	}
@@ -784,8 +785,8 @@ void Menu::sort_by(std::string sortBy)
 		std::cout << "Successfully Sorted\n";
 	sort_menu();
 }
-
-void Menu::save()
+template<typename Gift_t>
+void Menu<Gift_t>::save()
 {
 	system("cls");
 	std::string name;
@@ -815,8 +816,8 @@ void Menu::save()
 	std::cout << "Container successfully saved to file ' " << name << "'";
 	main();
 }
-
-void Menu::load()
+template<typename Gift_t>
+void Menu<Gift_t>::load()
 {
 	system("cls");
 	std::string name;
@@ -855,8 +856,31 @@ void Menu::load()
 
 int main()
 {
-	Menu menu;
-	menu.main();
+	int choose = 0;
+	std::cout << "Enter '1' if you want records \"Alive Gift\" and '0' to records \"Dead Gift\": ";
+	std::cin >> choose;
+	while (std::cin.fail())
+	{
+		std::cin.clear();
+		std::cin.ignore(LLONG_MAX, '\n');
+		std::cout << "incorrect value. Enter int value : ";
+		std::cin >> choose;
+	}
+
+	if (choose)
+	{
+		Menu<GiftHuman> menu;
+		menu.main();
+	}
+	else
+	{
+		Menu<Gift> menu;
+		menu.main();
+	}
+	
+
+	
+	
 
 	return 0;
 }
