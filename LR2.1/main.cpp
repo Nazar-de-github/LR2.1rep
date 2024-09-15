@@ -10,6 +10,7 @@ struct Date {
 class SomeClass {
 	int inte;
 	float flt;
+	float flt2;
 };
 
 
