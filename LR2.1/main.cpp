@@ -877,10 +877,5 @@ int main()
 		Menu<Gift> menu;
 		menu.main();
 	}
-	
-
-	
-	
-
 	return 0;
 }
