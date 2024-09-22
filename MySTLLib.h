@@ -20,25 +20,16 @@ public:
 	void show_vector();
 	void show_map();
 
-	bool empty() { return map_of_gift.empty(); }
+	bool empty();
 
 	float sum_of_all_price();
 	float sum_of_all_price(Type_t type);
 
 	auto find(const std::string& name);
 
-	void clear() { map_of_gift.clear(); }
+	void clear();
 
-	void Sort(bool(*pred)(const Gift_t&, const Gift_t&))
-	{
-		vector_of_gift.clear();
-		for (const auto& iter : map_of_gift)
-		{
-			vector_of_gift.push_back(iter.second);
-		}
-
-		std::sort(vector_of_gift.begin(), vector_of_gift.end(), pred);
-	}
+	void Sort(bool(*pred)(const Gift_t&, const Gift_t&));
 
 	friend std::ostream& operator<<(std::ostream& s, const MyCont<Type_t, Gift_t>& obj)
 	{
@@ -64,6 +55,30 @@ public:
 		return file;
 	}
 };
+
+template<typename Type_t, typename Gift_t>
+void MyCont<Type_t, Gift_t>::Sort(bool(*pred)(const Gift_t&, const Gift_t&))
+{
+	vector_of_gift.clear();
+	for (const auto& iter : map_of_gift)
+	{
+		vector_of_gift.push_back(iter.second);
+	}
+
+	std::sort(vector_of_gift.begin(), vector_of_gift.end(), pred);
+}
+
+template<typename Type_t, typename Gift_t>
+void MyCont<Type_t, Gift_t>::clear()
+{
+	map_of_gift.clear();
+}
+
+template<typename Type_t, typename Gift_t>
+bool MyCont<Type_t, Gift_t>::empty()
+{
+	return map_of_gift.empty();
+}
 
 template<typename Type_t, typename Gift_t>
 void MyCont<Type_t, Gift_t>::Add(Gift_t gift)

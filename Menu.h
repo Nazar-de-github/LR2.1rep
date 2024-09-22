@@ -1,177 +1,12 @@
+#pragma once
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include "MySTLLib.h"
+#include "BasicClasses.h"
+#include "Gift.h"
+#include "HumanGift.h" 
 
-struct Date {
-	int day;
-	int month;
-};
-
-class ForEvent {
-protected:
-	std::string type;
-	Date date;
-
-public:
-	ForEvent() : type("unknown"), date{ 0, 0 } {}
-	ForEvent(std::string t, Date d) : type(t), date(d) {}
-
-	virtual void set_type(std::string t) = 0;
-	virtual void set_date(Date d) = 0;
-
-	virtual std::string get_type() const = 0;
-	virtual Date get_date() const = 0;
-};
-
-class Item {
-protected:
-	std::string name;
-	float price;
-
-public:
-	Item() : name("unknown"), price(0.f) {}
-	Item(std::string n, float p) : name(n), price(p) {}
-
-	virtual void set_name(std::string n) = 0;
-	virtual void set_price(float p) = 0;
-
-	virtual std::string get_name() const = 0;
-	virtual float get_price() const = 0;
-};
-
-class Human {
-protected:
-	std::string name;
-	float price;
-
-public:
-	Human() : name("unknown"), price(0.f) {}
-	Human(std::string n, float p) : name(n), price(p) {}
-
-	virtual void set_name(std::string n) = 0;
-	virtual void set_price(float p) = 0;
-
-	virtual std::string get_name() const = 0;
-	virtual float get_price() const = 0;
-};
-
-class Gift : public Item, public ForEvent {
-private:
-
-public:
-	Gift() : Item(), ForEvent(){}
-	Gift(std::string gift_name, float gift_price, std::string event_type, Date event_date)
-		: Item(gift_name, gift_price), ForEvent(event_type, event_date) {}
-	Gift(std::string gift_name, float gift_price, std::string event_type)
-		: Item(gift_name, gift_price), ForEvent() {}
-
-	virtual void set_name(std::string gift_name) { name = gift_name; }
-	virtual void set_price(float gift_price) { price = gift_price; }
-	virtual void set_type(std::string gift_type) { type = gift_type; }
-	virtual void set_date(Date d) { date = d; }
-
-	virtual Date get_date() const { return date; }
-	virtual std::string get_name()const { return name; }
-	float get_price()const { return price; }
-	virtual std::string get_type()const { return type; }
-
-
-	friend std::ostream& operator<<(std::ostream& s, Gift gift);
-	friend std::ifstream& operator>>(std::ifstream& s, Gift& gift);
-
-	~Gift() = default;
-};
-
-class GiftHuman : public Human, public ForEvent {
-private:
-
-public:
-	GiftHuman() : Human(), ForEvent() {}
-	GiftHuman(std::string gift_name, float gift_price, std::string event_type, Date event_date)
-		: Human(gift_name, gift_price), ForEvent(event_type, event_date) {}
-	GiftHuman(std::string gift_name, float gift_price, std::string event_type)
-		: Human(gift_name, gift_price), ForEvent() {}
-
-	virtual void set_name(std::string gift_name) { name = gift_name; }
-	virtual void set_price(float gift_price) { price = gift_price; }
-	virtual void set_type(std::string gift_type) { type = gift_type; }
-	virtual void set_date(Date d) { date = d; }
-
-	virtual Date get_date() const { return date; }
-	virtual std::string get_name()const { return name; }
-	float get_price()const { return price; }
-	virtual std::string get_type()const { return type; }
-
-
-	friend std::ostream& operator<<(std::ostream& s, Gift gift);
-	friend std::ifstream& operator>>(std::ifstream& s, Gift& gift);
-
-	~GiftHuman() = default;
-};
-
-std::ostream& operator<<(std::ostream& s, GiftHuman gift) {
-	s << gift.get_name() << "\t" << gift.get_price() << "\t" << gift.get_type() << "\t" << std::setw(2) << std::setfill('0') << gift.get_date().day << "/" << std::setw(2) << std::setfill('0') << gift.get_date().month;
-	return s;
-}
-
-std::ifstream& operator>>(std::ifstream& s, GiftHuman& gift) {
-	std::string name;
-	float price;
-	std::string type;
-	Date event_date;
-
-	std::string temp, temp2;
-	if (s >> name >> price >> type >> temp)
-	{
-		temp2.assign(temp, 0, 2);
-		event_date.day = std::stoi(temp2);
-		temp2.assign(temp, 3, 5);
-		event_date.month = std::stoi(temp2);
-
-		gift.set_name(name);
-		gift.set_price(price);
-		gift.set_type(type);
-		gift.set_date(event_date);
-	}
-	else
-	{
-		std::cerr << "Empty file";
-	}
-
-	return s;
-}
-
-std::ostream& operator<<(std::ostream& s, Gift gift) {
-	s << gift.get_name() << "\t" << gift.get_price() << "\t" << gift.get_type() << "\t" <<std::setw(2)<<std::setfill('0') << gift.get_date().day << "/" << std::setw(2) << std::setfill('0') << gift.get_date().month;
-	return s;
-}
-
-std::ifstream& operator>>(std::ifstream& s, Gift& gift) {
-	std::string name;
-	float price;
-	std::string type;
-	Date event_date;
-
-	std::string temp, temp2;
-	if (s >> name >> price >> type >> temp)
-	{
-		temp2.assign(temp, 0, 2);
-		event_date.day = std::stoi(temp2);
-		temp2.assign(temp, 3, 5);
-		event_date.month = std::stoi(temp2);
-
-		gift.set_name(name);
-		gift.set_price(price);
-		gift.set_type(type);
-		gift.set_date(event_date);
-	}
-	else
-	{
-		std::cerr << "Empty file";
-	}
-	
-	return s;
-}
 
 template<typename Gift_t>
 class Menu {
@@ -245,7 +80,7 @@ void Menu<Gift_t>::add_from_keyboard()
 		std::cin >> month;
 	}
 
-	Gift_t temp(name, price, type, {day, month});
+	Gift_t temp(name, price, type, { day, month });
 	container.Add(temp);
 
 	system("cls");
@@ -332,7 +167,7 @@ void Menu<Gift_t>::show_all()
 		main();
 	}
 }
-template<typename Gift_t>
+template<typename Gift_t> // show sorted conteiner (if you sort them before)
 void Menu<Gift_t>::show_vector()
 {
 	system("cls");
@@ -397,7 +232,7 @@ void Menu<Gift_t>::delete_all()
 	std::cout << "Successfully delete all gifts\n";
 	delete_menu();
 }
-template<typename Gift_t>
+template<typename Gift_t> // show summary price for type
 void Menu<Gift_t>::show_sum_type()
 {
 	system("cls");
@@ -406,7 +241,7 @@ void Menu<Gift_t>::show_sum_type()
 	std::cin >> type;
 
 	system("cls");
-	std::cout << "Summary price: " << container.sum_of_all_price(type)<<"\n";
+	std::cout << "Summary price: " << container.sum_of_all_price(type) << "\n";
 	main();
 }
 template<typename Gift_t>
@@ -416,7 +251,7 @@ void Menu<Gift_t>::show_sum_all()
 	std::cout << "Summary price: " << container.sum_of_all_price() << "\n";
 	main();
 }
-template<typename Gift_t>
+template<typename Gift_t> // show main menu
 void Menu<Gift_t>::main()
 {
 	std::cout << std::endl;
@@ -487,7 +322,7 @@ void Menu<Gift_t>::main()
 		}
 	}
 }
-template<typename Gift_t>
+template<typename Gift_t> // Show menu for add gifts
 void Menu<Gift_t>::Add()
 {
 	std::cout << std::endl;
@@ -498,7 +333,7 @@ void Menu<Gift_t>::Add()
 	std::cout << "                                     [0] Exit                                       \n\n\n";
 	std::cout << "                            Enter number (0-3) to choose option                     \n\n";
 	std::cout << "               ========================================================             \n";
-	
+
 	int choose = -1;
 	while (choose == -1)
 	{
@@ -531,7 +366,7 @@ void Menu<Gift_t>::Add()
 		}
 	}
 }
-template<typename Gift_t>
+template<typename Gift_t> //show menu to choose what you want to se from your container
 void Menu<Gift_t>::show()
 {
 	std::cout << std::endl;
@@ -624,7 +459,7 @@ void Menu<Gift_t>::delete_menu()
 		}
 	}
 }
-template<typename Gift_t>
+template<typename Gift_t> // show menu for choose sum that you want to see
 void Menu<Gift_t>::show_sum()
 {
 	std::cout << std::endl;
@@ -668,7 +503,7 @@ void Menu<Gift_t>::show_sum()
 		}
 	}
 }
-template<typename Gift_t>
+template<typename Gift_t> // show menu to choose by what you want to sort container
 void Menu<Gift_t>::sort_menu()
 {
 	std::cout << std::endl;
@@ -753,8 +588,8 @@ void Menu<Gift_t>::sort_by(std::string sortBy)
 		}
 		if (sortBy == "date")
 		{
-			container.Sort([](const Gift_t& a, const Gift_t& b) {return ( a.get_date().month < b.get_date().month ||
-				a.get_date().month == b.get_date().month && a.get_date().day < b.get_date().day ); });
+			container.Sort([](const Gift_t& a, const Gift_t& b) {return (a.get_date().month < b.get_date().month ||
+				a.get_date().month == b.get_date().month && a.get_date().day < b.get_date().day); });
 		}
 	}
 	else
@@ -785,7 +620,7 @@ void Menu<Gift_t>::sort_by(std::string sortBy)
 		std::cout << "Successfully Sorted\n";
 	sort_menu();
 }
-template<typename Gift_t>
+template<typename Gift_t> // save this container gifts to file
 void Menu<Gift_t>::save()
 {
 	system("cls");
@@ -806,7 +641,7 @@ void Menu<Gift_t>::save()
 	}
 
 	std::ofstream file;
-	if(choose)
+	if (choose)
 		file.open(name, std::ios::out);
 	else
 		file.open(name, std::ios::app);
@@ -816,7 +651,8 @@ void Menu<Gift_t>::save()
 	std::cout << "Container successfully saved to file ' " << name << "'";
 	main();
 }
-template<typename Gift_t>
+
+template<typename Gift_t> // Load gifts from file to container
 void Menu<Gift_t>::load()
 {
 	system("cls");
@@ -850,32 +686,6 @@ void Menu<Gift_t>::load()
 		file.close();
 	}
 	system("cls");
-	std::cout << "The file ' "<< name <<" ' has been successfully copied to the container";
+	std::cout << "The file ' " << name << " ' has been successfully copied to the container";
 	main();
-}
-
-int main()
-{
-	int choose = 0;
-	std::cout << "Enter '1' if you want records \"Alive Gift\" and '0' to records \"Dead Gift\": ";
-	std::cin >> choose;
-	while (std::cin.fail())
-	{
-		std::cin.clear();
-		std::cin.ignore(LLONG_MAX, '\n');
-		std::cout << "incorrect value. Enter int value : ";
-		std::cin >> choose;
-	}
-
-	if (choose)
-	{
-		Menu<GiftHuman> menu;
-		menu.main();
-	}
-	else
-	{
-		Menu<Gift> menu;
-		menu.main();
-	}
-	return 0;
 }
